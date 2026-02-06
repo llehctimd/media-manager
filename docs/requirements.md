@@ -89,3 +89,8 @@ GET     /api/v1/shows/{showId}/seasons/{seasonId}/episodes  # Get all episodes f
     - Express to serve React web app and API
     - Interacts with the filesystem
     - SQLite database to store media-file and content data
+
+
+# Architecture
+
+`React app -> Rest API -> Services -> Repositories`
