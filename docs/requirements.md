@@ -41,7 +41,9 @@ A GUI based web application (intended for local network traffic only) to manage 
 
 ## Proposed API Endpoints
 ```
-POST    /api/v1/scans                                       # Trigger a scan
+POST    /api/v1/scans                                       # Create a new scan
+GET     /api/v1/scans/{id}                                  # Get scan info
+DELTE   /api/v1/scans/{id}                                  # Delte a scan
 
 GET     /api/v1/media-files                                 # Get all currently scanned media files
 GET     /api/v1/media-files/{id}                            # Get scanned media file with {id}
