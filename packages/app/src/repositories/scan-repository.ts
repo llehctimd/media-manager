@@ -2,7 +2,7 @@ import type { Scan } from "../model/scan.js"
 
 export interface IScanRepository {
     get(id: string): Promise<Scan> 
-    insert(scan: Scan): Promise<Scan>
+    insert(scan: Scan): Promise<void>
     update(scan: Scan): Promise<void>
 }
 
@@ -21,12 +21,11 @@ export class MapScanRepository implements IScanRepository {
         return scan
     }
 
-    async insert(scan: Scan): Promise<Scan> {
+    async insert(scan: Scan): Promise<void> {
         if (this._scanMap.has(scan.id)) {
-            throw new Error(`Scan with id '${scan.id} already exists in repository`)
+            throw new Error(`Scan with id '${scan.id}' already exists in repository`)
         }
         this._scanMap.set(scan.id, scan)
-        return scan
     }
 
     async update(scan: Scan): Promise<void> {

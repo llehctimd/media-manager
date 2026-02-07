@@ -46,7 +46,7 @@ describe("MapScanRepository implementation", () => {
         await expect(scanRepo.insert(scan)).resolves.not.toThrow()
         scan.status = "complete"
         await expect(scanRepo.insert(scan)).rejects.toThrow(
-            new Error(`Scan with id '${scan.id} already exists in repository`)
+            new Error(`Scan with id '${scan.id}' already exists in repository`)
         )
     })
 })
