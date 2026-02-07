@@ -10,7 +10,7 @@ describe("MapScanRepository implementation", () => {
     afterEach(() => {})
 
     it("tests insert and get", async () => {
-        const scan = createScan("queued")
+        const scan = createScan("path/to/file", "queued")
         await scanRepo.insert(scan)
         const sameScan = await scanRepo.get(scan.id)
         expect(scan).toEqual(sameScan)
@@ -23,7 +23,7 @@ describe("MapScanRepository implementation", () => {
     })
 
     it("tests update scan", async () => {
-        const scan = createScan("queued")
+        const scan = createScan("path/to/file", "queued")
         await scanRepo.insert(scan)
         scan.status = "error"
         scan.startedAt = new Date(1)
@@ -35,14 +35,14 @@ describe("MapScanRepository implementation", () => {
     })
 
     it("tests update on non-existant id throws", async () => {
-        const scan = createScan("complete")
+        const scan = createScan("path/to/file", "complete")
         await expect(scanRepo.update(scan)).rejects.toThrow(
             new Error(`No scan with id '${scan.id}' exists in repository`)
         )
     })
 
     it("tests insert on already existing id throws", async () => {
-        const scan = createScan("queued")
+        const scan = createScan("path/to/file", "queued")
         await expect(scanRepo.insert(scan)).resolves.not.toThrow()
         scan.status = "complete"
         await expect(scanRepo.insert(scan)).rejects.toThrow(
