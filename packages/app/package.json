@@ -1,30 +1,27 @@
 {
-  "name": "app",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/main.js",
-  "type": "module",
-  "scripts": {
-    "build": "tsc",
-    "dev": "tsx --watch src/main.ts",
-    "test": "node --no-warnings=ExperimentalWarning --experimental-vm-modules node_modules/jest/bin/jest.js --no-cache"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.28.1",
-  "devDependencies": {
-    "@jest/globals": "^30.2.0",
-    "@types/express": "^5.0.6",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^25.2.1",
-    "jest": "^30.2.0",
-    "ts-jest": "^29.4.6",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "express": "^5.2.1",
-    "uuid": "^13.0.0"
-  }
+    "name": "app",
+    "version": "1.0.0",
+    "description": "media manager application server",
+    "main": "dist/main.js",
+    "type": "module",
+    "scripts": {
+        "build": "tsc -p tsconfig.app.json",
+        "dev": "tsx --watch src/main.ts",
+        "test": "vitest"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "packageManager": "pnpm@10.28.1",
+    "devDependencies": {
+        "@types/express": "^5.0.6",
+        "@types/node": "^25.2.1",
+        "tsx": "^4.21.0",
+        "typescript": "^5.9.3",
+        "vitest": "^4.0.18"
+    },
+    "dependencies": {
+        "express": "^5.2.1",
+        "uuid": "^13.0.0"
+    }
 }
