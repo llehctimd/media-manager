@@ -19,11 +19,11 @@
         "noUncheckedSideEffectImports": true,
         "moduleDetection": "force",
         "skipLibCheck": true,
+        "resolveJsonModule": true,
         "baseUrl": ".",
         "paths": {
             "@/*": ["src/*"]
         }
     },
-    "exclude": ["./src"],
-    "references": [{ "path": "./tsconfig.app.json" }]
+    "include": ["./vite.config.ts"],
 }
