@@ -43,7 +43,6 @@ A GUI based web application (intended for local network traffic only) to manage 
 ```
 POST    /api/v1/scans                                       # Create a new scan
 GET     /api/v1/scans/{id}                                  # Get scan info
-DELTE   /api/v1/scans/{id}                                  # Cancel a scan
 
 GET     /api/v1/media-files                                 # Get all currently scanned media files
 GET     /api/v1/media-files/{id}                            # Get scanned media file with {id}

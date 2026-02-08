@@ -9,6 +9,6 @@ export type MockScanUseCase = ScanUseCase & {
 export function createMockScanUseCase(): MockScanUseCase {
     return {
         queueScan: vi.fn(),
-        getScan: vi.fn()
+        getScan: vi.fn(),
     } as MockScanUseCase
 }
