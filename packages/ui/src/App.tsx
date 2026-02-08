@@ -11,7 +11,7 @@ function App() {
     const retryRef = useRef<undefined | number>(undefined)
 
     useEffect(() => {
-        if (scanId !== "" && scanStatus !== "completed") {
+        if (scanId !== "" && !(scanStatus === "completed" || scanStatus === "error")) {
             retryRef.current = setInterval(async () => {
                 console.log("Interval!")
                 const scan = await getScan(scanId)

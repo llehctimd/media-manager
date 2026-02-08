@@ -19,7 +19,15 @@ interface CompletedScan {
     finishedAt: Date
 }
 
-export type Scan = QueuedScan | RunningScan | CompletedScan
+interface ErrorScan {
+    id: string
+    path: string
+    status: "error"
+    startedAt: Date
+    finishedAt: Date
+}
+
+export type Scan = QueuedScan | RunningScan | CompletedScan | ErrorScan
 
 export async function queueScan(path: string): Promise<Scan> {
     const res = await fetch("/api/v1/scans", {
@@ -32,9 +40,6 @@ export async function queueScan(path: string): Promise<Scan> {
         }),
     })
     const json = await res.json()
-    if (json.error !== undefined) {
-        throw new Error(json.error)
-    }
     switch (json.status) {
         case "queued":
             return { id: json.id, path: json.path, status: "queued" }
@@ -51,7 +56,15 @@ export async function queueScan(path: string): Promise<Scan> {
                 path: json.path,
                 status: "completed",
                 startedAt: new Date(json.startedAt),
-                finishedAt: new Date(json.finishedAt)
+                finishedAt: new Date(json.finishedAt),
+            }
+        case "error":
+            return {
+                id: json.id,
+                path: json.path,
+                status: "error",
+                startedAt: new Date(json.startedAt),
+                finishedAt: new Date(json.finishedAt),
             }
         default:
             throw new Error("Invalid response")
@@ -63,12 +76,9 @@ export async function getScan(id: string): Promise<Scan> {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-        }
+        },
     })
     const json = await res.json()
-    if (json.error !== undefined) {
-        throw new Error(json.error)
-    }
     switch (json.status) {
         case "queued":
             return { id: json.id, path: json.path, status: "queued" }
@@ -85,7 +95,15 @@ export async function getScan(id: string): Promise<Scan> {
                 path: json.path,
                 status: "completed",
                 startedAt: new Date(json.startedAt),
-                finishedAt: new Date(json.finishedAt)
+                finishedAt: new Date(json.finishedAt),
+            }
+        case "error":
+            return {
+                id: json.id,
+                path: json.path,
+                status: "error",
+                startedAt: new Date(json.startedAt),
+                finishedAt: new Date(json.finishedAt),
             }
         default:
             throw new Error("Invalid response")

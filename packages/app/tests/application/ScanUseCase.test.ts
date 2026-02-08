@@ -3,6 +3,7 @@ import type { MediaFileRepository } from "@/domain/media-files/MediaFileReposito
 import { Scan } from "@/domain/scans/Scan.js"
 import type { ScanRepository } from "@/domain/scans/ScanRepository.js"
 import type { FileSystem } from "@/infrastructure/file-system/FileSystem.js"
+import { createMockLogger, type MockLogger } from "tests/mocks/MockLogger.js"
 
 import type { Mock } from "vitest"
 
@@ -10,6 +11,7 @@ describe("Test RunScanUseCase service", () => {
     let mockFileSystem: FileSystem
     let mockScanRepository: ScanRepository
     let mockMediaFileRepository: MediaFileRepository
+    let mockLogger: MockLogger
     let scanUseCase: ScanUseCase
 
     beforeEach(async () => {
@@ -22,7 +24,7 @@ describe("Test RunScanUseCase service", () => {
         mockScanRepository = {
             findById: vi.fn(
                 async (id: string) =>
-                    new Scan(id, "path/to/dir", "queued", null, null)
+                    new Scan(id, "path/to/dir", "queued", null, null, null)
             ),
             save: vi.fn().mockResolvedValue(undefined),
         }
@@ -32,10 +34,12 @@ describe("Test RunScanUseCase service", () => {
             save: vi.fn().mockResolvedValue(undefined),
             deleteNotScanId: vi.fn().mockResolvedValue(undefined),
         }
+        mockLogger = createMockLogger()
         scanUseCase = new ScanUseCase(
             mockFileSystem,
             mockScanRepository,
-            mockMediaFileRepository
+            mockMediaFileRepository,
+            mockLogger
         )
     })
 
