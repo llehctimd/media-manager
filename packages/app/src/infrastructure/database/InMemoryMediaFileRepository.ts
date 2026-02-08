@@ -35,6 +35,14 @@ export class InMemoryMediaFileRepository implements MediaFileRepository {
         return new MediaFile(id, data.path, data.scanId)
     }
 
+    async findAll(): Promise<MediaFile[]> {
+        return Array.from(
+            this._idToDataMap.entries().map((entry) => {
+                return new MediaFile(entry[0], entry[1].path, entry[1].scanId)
+            })
+        )
+    }
+
     async save(mediaFile: MediaFile): Promise<void> {
         const existingMf = await this.findById(mediaFile.id)
         if (existingMf === null) {

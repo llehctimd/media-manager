@@ -9,6 +9,15 @@ function isMediaFileEqual(left: MediaFile, right: MediaFile): boolean {
     )
 }
 
+function containsMediaFile(arr: MediaFile[], has: MediaFile): boolean {
+    for (const mf of arr) {
+        if (isMediaFileEqual(mf, has)) {
+            return true
+        }
+    }
+    return false
+}
+
 describe("Test in-memory implementation of MediaFileRespository", () => {
     let mediaFileRepo: InMemoryMediaFileRepository
 
@@ -40,6 +49,25 @@ describe("Test in-memory implementation of MediaFileRespository", () => {
 
         const notFoundMf = await mediaFileRepo.findByPath("path/to/file2")
         expect(notFoundMf).toBeNull()
+    })
+
+    it("tests save and find all method", async () => {
+        const mf1 = new MediaFile("id-1", "path/to/file1", "scan-1")
+        const mf2 = new MediaFile("id-2", "path/to/file2", "scan-1")
+
+        await mediaFileRepo.save(mf1)
+        await mediaFileRepo.save(mf2)
+
+        const mfs = await mediaFileRepo.findAll()
+
+        expect(mfs).toHaveLength(2)
+        expect(containsMediaFile(mfs, mf1)).toBe(true)
+        expect(containsMediaFile(mfs, mf2)).toBe(true)
+    })
+
+    it("tests find all method should return empty array if repository empty", async () => {
+        const mfs = await mediaFileRepo.findAll()
+        expect(mfs).toHaveLength(0)
     })
 
     it("tests unique path constraint", async () => {
