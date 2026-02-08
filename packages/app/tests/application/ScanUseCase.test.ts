@@ -1,5 +1,4 @@
-import { RunScanUseCase } from "@/application/RunScanUseCase.js"
-import type { MediaFile } from "@/domain/media-files/MediaFile.js"
+import { ScanUseCase } from "@/application/ScanUseCase.js"
 import type { MediaFileRepository } from "@/domain/media-files/MediaFileRepository.js"
 import { Scan } from "@/domain/scans/Scan.js"
 import type { ScanRepository } from "@/domain/scans/ScanRepository.js"
@@ -11,7 +10,7 @@ describe("Test RunScanUseCase service", () => {
     let mockFileSystem: FileSystem
     let mockScanRepository: ScanRepository
     let mockMediaFileRepository: MediaFileRepository
-    let runScanUseCase: RunScanUseCase
+    let scanUseCase: ScanUseCase
 
     beforeEach(async () => {
         mockFileSystem = {
@@ -33,7 +32,7 @@ describe("Test RunScanUseCase service", () => {
             save: vi.fn().mockResolvedValue(undefined),
             deleteNotScanId: vi.fn().mockResolvedValue(undefined),
         }
-        runScanUseCase = new RunScanUseCase(
+        scanUseCase = new ScanUseCase(
             mockFileSystem,
             mockScanRepository,
             mockMediaFileRepository
@@ -45,7 +44,7 @@ describe("Test RunScanUseCase service", () => {
     })
 
     it("should return a new queued scan immediately", async () => {
-        const scan = await runScanUseCase.execute("path/to/dir")
+        const scan = await scanUseCase.queueScan("path/to/dir")
         expect(scan.status).toBe("queued")
     })
 
@@ -55,7 +54,7 @@ describe("Test RunScanUseCase service", () => {
             scanRepoScanCallArguments.push(scan.clone())
         )
         vi.useFakeTimers()
-        const scan = await runScanUseCase.execute("path/to/dir")
+        const scan = await scanUseCase.queueScan("path/to/dir")
         await vi.runAllTimersAsync()
 
         expect(mockScanRepository.save).toHaveBeenCalledWith(scan)
@@ -78,10 +77,24 @@ describe("Test RunScanUseCase service", () => {
         ])
     })
 
-    it("should not allow a new scan to be created if one is already in progress", async () => {
-        await runScanUseCase.execute("path/to/dir")
-        await expect(runScanUseCase.execute("/path/to/dir2")).rejects.toThrow(
+    it("should not allow a new scan to be queued if one is already in progress", async () => {
+        await scanUseCase.queueScan("path/to/dir")
+        await expect(scanUseCase.queueScan("/path/to/dir2")).rejects.toThrow(
             "A scan is already in progress"
         )
+    })
+
+    it("should get and return a scan from the repo", async () => {
+        const testId = "test-scan-id"
+        const scan = await scanUseCase.getScan(testId)
+
+        expect(mockScanRepository.findById).toHaveBeenCalledExactlyOnceWith(
+            testId
+        )
+        expect(scan?.id).toBe(testId)
+        expect(scan?.path).toBe("path/to/dir")
+        expect(scan?.status).toBe("queued")
+        expect(scan?.startedAt).toBeNull()
+        expect(scan?.finishedAt).toBeNull()
     })
 })

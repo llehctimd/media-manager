@@ -4,7 +4,7 @@ import { Scan } from "@/domain/scans/Scan.js"
 import type { ScanRepository } from "@/domain/scans/ScanRepository.js"
 import type { FileSystem } from "@/infrastructure/file-system/FileSystem.js"
 
-export class RunScanUseCase {
+export class ScanUseCase {
     private _fs: FileSystem
     private _scanRepo: ScanRepository
     private _mediaFileRepo: MediaFileRepository
@@ -21,7 +21,7 @@ export class RunScanUseCase {
         this._currentScanId = null
     }
 
-    async execute(path: string): Promise<Scan> {
+    async queueScan(path: string): Promise<Scan> {
         if (this._currentScanId !== null) {
             throw new Error("A scan is already in progress")
         }
@@ -51,5 +51,9 @@ export class RunScanUseCase {
             this._currentScanId = null
         })()
         return scan
+    }
+
+    async getScan(id: string): Promise<Scan | null> {
+        return await this._scanRepo.findById(id)
     }
 }
