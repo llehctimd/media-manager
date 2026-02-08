@@ -30,4 +30,14 @@ export class Scan {
         this.status = "completed"
         this.finishedAt = finishedAt
     }
+
+    clone(): Scan {
+        return new Scan(
+            this.id,
+            this.path,
+            this.status,
+            this.startedAt ? new Date(this.startedAt) : null,
+            this.finishedAt ? new Date(this.finishedAt) : null,
+        )
+    }
 }
