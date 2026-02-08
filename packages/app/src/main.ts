@@ -41,7 +41,7 @@ async function main() {
 
     apiMediaFilesRouter.get("/", (req, res) => mediaFileController.getAll(req, res))
     apiMediaFilesRouter.get("/:id", (req, res) => mediaFileController.get(req, res))
-    apiRouter.use("/media-files")
+    apiRouter.use("/media-files", apiMediaFilesRouter)
 
     app.use("/api/v1", apiRouter)
 
