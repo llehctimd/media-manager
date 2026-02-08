@@ -4,23 +4,29 @@ import { ScanUseCase } from "./application/ScanUseCase.js"
 import { NodeFileSystem } from "./infrastructure/file-system/NodeFileSystem.js"
 import { InMemoryScanRepository } from "./infrastructure/database/InMemoryScanRepository.js"
 import { InMemoryMediaFileRepository } from "./infrastructure/database/InMemoryMediaFileRepository.js"
+import { ConsoleLogger } from "./infrastructure/logging/ConsoleLogger.js"
 
 const PORT = 6969
 
 async function main() {
     // Application set up
+    const consoleLogger = new ConsoleLogger()
     const fileSystem = new NodeFileSystem()
     const scanRepository = new InMemoryScanRepository()
     const mediaFileRespository = new InMemoryMediaFileRepository()
     const scanUseCase = new ScanUseCase(
         fileSystem,
         scanRepository,
-        mediaFileRespository
+        mediaFileRespository,
+        consoleLogger
     )
     const scanController = new ScanController(scanUseCase)
 
     // Express set up
     const app = express()
+    app.use(express.json())
+    app.use(express.urlencoded({ extended: true }))
+
     const apiRouter = express.Router()
     const apiScanRouter = express.Router()
 

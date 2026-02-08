@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useRef, useState } from "react"
+import { Label } from "./components/Label"
+import { Input } from "./components/Input"
+import { Button } from "./components/Button"
+import { getScan, queueScan } from "./api/scans"
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [path, setPath] = useState<string>("")
+    const [scanId, setScanId] = useState<string>("")
+    const [scanStatus, setScanStatus] = useState<string>("")
+    const retryRef = useRef<undefined | number>(undefined)
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    useEffect(() => {
+        if (scanId !== "" && scanStatus !== "completed") {
+            retryRef.current = setInterval(async () => {
+                console.log("Interval!")
+                const scan = await getScan(scanId)
+                setScanStatus(scan.status)
+            }, 1000)
+        } else {
+            clearInterval(retryRef.current)
+            console.log("Interval cleared")
+        }
+    })
+
+    const handleScanOnClick: React.MouseEventHandler<
+        HTMLButtonElement
+    > = async () => {
+        const scan = await queueScan(path)
+        setScanId(scan.id)
+        setScanStatus(scan.status)
+    }
+
+    const handlePathOnChange: React.ChangeEventHandler<HTMLInputElement> = (
+        event
+    ) => {
+        setPath(event.target.value)
+    }
+    return (
+        <>
+            <Label>Path</Label>
+            <Input value={path} onChange={handlePathOnChange} />
+            <Button onClick={handleScanOnClick}>Scan</Button>
+            <p>Scan: {scanId}</p>
+            <p>Status: {scanStatus}</p>
+        </>
+    )
 }
 
 export default App

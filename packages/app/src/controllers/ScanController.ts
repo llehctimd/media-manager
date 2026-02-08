@@ -1,4 +1,5 @@
 import type { ScanUseCase } from "@/application/ScanUseCase.js"
+import type { Logger } from "@/infrastructure/logging/Logger.js"
 import type { Request, Response } from "express"
 import { z } from "zod"
 
