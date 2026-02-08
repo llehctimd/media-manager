@@ -1,13 +1,43 @@
 import express from "express"
+import { ScanController } from "./controllers/ScanController.js"
+import { ScanUseCase } from "./application/ScanUseCase.js"
+import { NodeFileSystem } from "./infrastructure/file-system/NodeFileSystem.js"
+import { InMemoryScanRepository } from "./infrastructure/database/InMemoryScanRepository.js"
+import { InMemoryMediaFileRepository } from "./infrastructure/database/InMemoryMediaFileRepository.js"
 
 const PORT = 6969
 
-const app = express()
+async function main() {
+    // Application set up
+    const fileSystem = new NodeFileSystem()
+    const scanRepository = new InMemoryScanRepository()
+    const mediaFileRespository = new InMemoryMediaFileRepository()
+    const scanUseCase = new ScanUseCase(
+        fileSystem,
+        scanRepository,
+        mediaFileRespository
+    )
+    const scanController = new ScanController(scanUseCase)
 
-app.get("/", async (_, res) => {
-    return res.send("Hello, world!")
-})
+    // Express set up
+    const app = express()
+    const apiRouter = express.Router()
+    const apiScanRouter = express.Router()
 
-app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`)
-})
+    apiScanRouter.post("/", (req, res) => scanController.queueScan(req, res))
+    apiScanRouter.get("/:id", (req, res) => scanController.getScan(req, res))
+
+    apiRouter.use("/scans", apiScanRouter)
+
+    app.use("/api/v1", apiRouter)
+
+    app.get("/", async (_, res) => {
+        return res.send("Hello, world!")
+    })
+
+    app.listen(PORT, () => {
+        console.log(`Listening on port ${PORT}`)
+    })
+}
+
+main()

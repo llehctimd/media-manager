@@ -2,6 +2,14 @@ import { v7 as uuidv7 } from "uuid"
 
 export type ScanStatus = "queued" | "running" | "completed"
 
+interface ScanDTO {
+    id: string,
+    path: string,
+    status: string,
+    startedAt: string | null,
+    finishedAt: string | null
+}
+
 export class Scan {
     constructor(
         public id: string,
@@ -37,7 +45,17 @@ export class Scan {
             this.path,
             this.status,
             this.startedAt ? new Date(this.startedAt) : null,
-            this.finishedAt ? new Date(this.finishedAt) : null,
+            this.finishedAt ? new Date(this.finishedAt) : null
         )
+    }
+
+    toJSON(): ScanDTO {
+        return {
+            id: this.id,
+            path: this.path,
+            status: this.status,
+            startedAt: this.startedAt?.toISOString() ?? null,
+            finishedAt: this.finishedAt?.toISOString() ?? null
+        }
     }
 }
