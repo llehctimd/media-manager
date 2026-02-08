@@ -8,7 +8,7 @@
         "build": "vite build",
         "start": "node dist/app.js",
         "dev": "tsx --watch src/main.ts",
-        "test": "vitest"
+        "test": "vitest run"
     },
     "keywords": [],
     "author": "",
