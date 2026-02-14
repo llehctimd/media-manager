@@ -1,4 +1,5 @@
 import { DomainError } from "@/errors.js"
+import { v7 as uuidv7 } from "uuid"
 
 export class Show {
     private _id: string
@@ -12,6 +13,10 @@ export class Show {
         }
         this._title = title
         this._year = year
+    }
+
+    static create(title: string, year: number | null) {
+        return new Show(uuidv7(), title, year)
     }
 
     get id() {
