@@ -1,7 +1,6 @@
 import { ShowService } from "@/application/ShowService.js"
 import { Show } from "@/domain/model/Show.js"
 import { NotFoundError } from "@/errors.js"
-import { title } from "node:process"
 import {
     createMockShowRepository,
     type MockShowRepository,
