@@ -16,3 +16,9 @@ export class DomainError extends AppError {
         super(message, code, details)
     }
 }
+
+export class NotFoundError extends AppError {
+    constructor(message: string, code = "NOT_FOUND_ERROR", details?: unknown) {
+        super(message, code, details)
+    }
+}

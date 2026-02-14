@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS shows (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    year INTEGER
+);
