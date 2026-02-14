@@ -29,8 +29,9 @@ export class Show {
 
     set title(title: string) {
         if (title === "") {
-
+            throw new DomainError("Show title cannot be blank", "SHOW_DOMAIN_ERROR", { title })
         }
+        this._title = title
     }
 
     get year() {
