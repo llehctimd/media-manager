@@ -1,6 +1,6 @@
 import { EpisodeService } from "@/application/EpisodeService.js"
 import { Episode, EpisodeNumber } from "@/domain/model/Episode.js"
-import { DomainError, NotFoundError } from "@/errors.js"
+import { NotFoundError } from "@/errors.js"
 import {
     createMockEpisodeRepository,
     type MockEpisodeRepository,
