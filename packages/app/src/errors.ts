@@ -14,11 +14,15 @@ export abstract class AppError extends Error {
 export class DomainError extends AppError {
     constructor(message: string, code = "DOMAIN_ERROR", details?: unknown) {
         super(message, code, details)
+
+        Object.setPrototypeOf(this, DomainError.prototype)
     }
 }
 
 export class NotFoundError extends AppError {
     constructor(message: string, code = "NOT_FOUND_ERROR", details?: unknown) {
         super(message, code, details)
+
+        Object.setPrototypeOf(this, NotFoundError.prototype)
     }
 }

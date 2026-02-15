@@ -18,7 +18,7 @@ export interface ShowServiceGetShowByIdProps {
 
 export interface ShowServiceUpdateShowProps {
     id: string
-    title?: string
+    title?: string 
     year?: number | null
 }
 
